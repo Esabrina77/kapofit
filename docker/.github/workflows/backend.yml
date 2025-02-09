@@ -1,0 +1,50 @@
+name: Backend CI/CD
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'backend/**'
+      - '.github/workflows/backend.yml'
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:14
+        env:
+          POSTGRES_USER: kaporalfit
+          POSTGRES_PASSWORD: kaporalfit
+          POSTGRES_DB: kaporalfit
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18'
+
+      - name: Install Dependencies
+        run: |
+          cd backend
+          npm install
+
+      - name: Generate Prisma Client
+        run: |
+          cd backend
+          npx prisma generate
+
+      - name: Run Tests
+        run: |
+          cd backend
+          npm run test
