@@ -12,3 +12,74 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+// Utilisateur
+model User {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  firstName     String    // Prénom (obligatoire)
+  lastName      String    // Nom (obligatoire)
+  password      String?   // Le ? rend le champ nullable
+  imageUrl      String?   // Photo (optionnelle)
+  firebaseId    String?   @unique  // Optionnel maintenant
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  // Relations
+  workouts      Workout[]
+  stats         Stats?
+  bodyInfo      BodyInfo?  // Renommé de Profile à BodyInfo
+}
+
+// Renommé de Profile à BodyInfo pour plus de clarté
+model BodyInfo {
+  id            String    @id @default(uuid())
+  userId        String    @unique
+  height        Float?    // Taille en cm (optionnel)
+  weight        Float?    // Poids en kg (optionnel)
+  goals         String[]  // Objectifs
+  level         String    @default("BEGINNER")
+  
+  // Relations
+  user          User      @relation(fields: [userId], references: [id])
+}
+
+// Séance d'entraînement
+model Workout {
+  id            String    @id @default(uuid())
+  userId        String
+  date          DateTime  @default(now())
+  duration      Int       // en secondes
+  type          String    // "SOLO" ou "DUO"
+  status        String    @default("IN_PROGRESS") // "IN_PROGRESS", "COMPLETED", "CANCELLED"
+  
+  // Relations
+  user          User      @relation(fields: [userId], references: [id])
+  exercises     Exercise[]
+}
+
+// Exercice
+model Exercise {
+  id            String    @id @default(uuid())
+  workoutId     String
+  name          String
+  sets          Int
+  reps          Int
+  score         Float?    // Score de performance
+  
+  // Relations
+  workout       Workout   @relation(fields: [workoutId], references: [id])
+}
+
+// Statistiques utilisateur
+model Stats {
+  id            String    @id @default(uuid())
+  userId        String    @unique
+  totalWorkouts Int       @default(0)
+  totalTime     Int       @default(0)  // en secondes
+  points        Int       @default(0)
+  level         Int       @default(1)
+  
+  // Relations
+  user          User      @relation(fields: [userId], references: [id])
+}

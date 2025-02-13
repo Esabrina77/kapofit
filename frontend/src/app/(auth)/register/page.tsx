@@ -2,9 +2,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { auth } from "@/lib/firebase/firebase";
-import { createUserWithEmailAndPassword , GoogleAuthProvider , signInWithPopup, updateProfile } from "firebase/auth";
+import { createUserWithEmailAndPassword , GoogleAuthProvider , signInWithPopup } from "firebase/auth";
 import { useRouter } from "next/navigation";
-import { FirebaseError } from "firebase/app";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -16,53 +15,72 @@ export default function RegisterPage() {
     const formData = new FormData(e.currentTarget);
     
     try {
-      const result = await createUserWithEmailAndPassword(
+      // 1. Créer l'utilisateur Firebase
+      const userCredential = await createUserWithEmailAndPassword(
         auth,
         formData.get("email") as string,
         formData.get("password") as string
       );
-      
-      if (result.user) {
-        // Mettre à jour le profil avec le nom
-        await updateProfile(result.user, {
-          displayName: formData.get("name") as string
-        });
-        
-        router.push('/dashboard');
+
+      // 2. Créer l'utilisateur dans notre base de données
+      const response = await fetch('http://localhost:3002/api/users', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${await userCredential.user.getIdToken()}`
+        },
+        body: JSON.stringify({
+          email: userCredential.user.email,
+          firstName: formData.get("firstName"),
+          lastName: formData.get("lastName"),
+          firebaseId: userCredential.user.uid,
+          imageUrl: userCredential.user.photoURL
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Erreur lors de la création du profil');
       }
+
+      // 3. Rediriger vers le dashboard
+      router.push('/dashboard');
     } catch (error) {
-      if (error instanceof FirebaseError) {
-        switch (error.code) {
-          case 'auth/email-already-in-use':
-            toast.error('Email déjà utilisé');
-            break;
-          case 'auth/invalid-email':
-            toast.error('Email invalide');
-            break;
-          case 'auth/operation-not-allowed':
-            toast.error('Inscription par email désactivée');
-            break;
-          case 'auth/weak-password':
-            toast.error('Mot de passe trop faible');
-            break;
-          default:
-            toast.error('Erreur lors de l\'inscription');
-        }
-      } else {
-        toast.error('Une erreur inattendue est survenue');
-      }
+      console.error('Erreur inscription:', error);
+      toast.error('Erreur lors de l\'inscription');
     }
   };
 
   const handleGoogleSignIn = async () => {
     try {
-        const provider = new GoogleAuthProvider();
-        const result = await signInWithPopup(auth, provider);
-        if (result.user) {
-            router.push("/dashboard");
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(auth, provider);
+      
+      if (result.user) {
+        // Créer l'utilisateur dans notre base de données
+        const response = await fetch('http://localhost:3002/api/users', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${await result.user.getIdToken()}`
+          },
+          body: JSON.stringify({
+            email: result.user.email,
+            firstName: result.user.displayName?.split(' ')[0] || '',
+            lastName: result.user.displayName?.split(' ')[1] || '',
+            firebaseId: result.user.uid,
+            imageUrl: result.user.photoURL
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error('Erreur création profil');
         }
+
+        router.push('/dashboard');
+      }
     } catch (error) {
-        console.error("Erreur lors de la connexion avec Google:", error);
+      console.error('Erreur Google Sign In:', error);
+      toast.error('Erreur lors de la connexion avec Google');
     }
   };
 
