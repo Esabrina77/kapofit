@@ -28,7 +28,7 @@ export const authMiddleware = async (
       return res.status(401).json({ error: 'Token manquant' })
     }
 
-    // Vérifier et décoder le token
+    // Vérifier le token Firebase
     const decodedToken = await getAuth().verifyIdToken(token)
     
     // Ajouter les informations de l'utilisateur à la requête
@@ -37,6 +37,7 @@ export const authMiddleware = async (
     // Passer à la suite
     next()
   } catch (error) {
+    console.error('Erreur auth:', error)
     res.status(401).json({ error: 'Token invalide' })
   }
 } 

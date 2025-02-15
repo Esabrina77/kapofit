@@ -1,5 +1,5 @@
-import { PrismaClient } from '@prisma/client'
-import { CreateWorkoutDTO, WorkoutResponse, UpdateWorkoutDTO, FullWorkoutDTO, WorkoutDTO } from '../types/workout.types'
+import { PrismaClient, Workout } from '@prisma/client'
+import { WorkoutResponse, UpdateWorkoutDTO, FullWorkoutDTO, WorkoutDTO } from '../types/workout.types'
 
 export class WorkoutService {
   private prisma: PrismaClient
@@ -10,37 +10,39 @@ export class WorkoutService {
   }
 
   // Créer un nouveau workout
-  async createWorkout(data: CreateWorkoutDTO): Promise<WorkoutResponse> {
-    try {
-      // Vérifier si l'utilisateur existe
-      const user = await this.prisma.user.findUnique({
-        where: { firebaseId: data.userId }
-      });
-
-      if (!user) {
-        throw new Error('Utilisateur non trouvé');
-      }
-
-      // Créer le workout avec l'ID de l'utilisateur
-      const workout = await this.prisma.workout.create({
+  async createWorkout(userId: string, data: {
+    type: string;
+    duration: number;
+  }): Promise<Workout> {
+    return this.prisma.$transaction(async (tx) => {
+      // Créer le workout
+      const workout = await tx.workout.create({
         data: {
-          userId: user.id,  // Utiliser l'ID de l'utilisateur de la base de données
+          userId,
           type: data.type,
-          duration: 0,  // Ajout de la durée par défaut
-          exercises: {
-            create: data.exercises
-          }
-        },
-        include: {
-          exercises: true
+          duration: data.duration,
+          status: 'IN_PROGRESS',
+          date: new Date(),
         }
       });
 
-      return { ...workout, createdAt: workout.date };
-    } catch (error) {
-      console.error('Erreur création workout:', error);
-      throw error;
-    }
+      // Calculer le nombre total de workouts
+      const totalWorkouts = await tx.workout.count({
+        where: { userId }
+      });
+
+      // Mettre à jour les stats avec le nombre réel de workouts
+      await tx.stats.update({
+        where: { userId },
+        data: {
+          totalWorkouts: totalWorkouts,
+          totalTime: { increment: data.duration },
+          points: { increment: 10 }
+        }
+      });
+
+      return workout;
+    });
   }
 
   // Récupérer les workouts d'un utilisateur
@@ -62,23 +64,27 @@ export class WorkoutService {
   }
 
   // Mettre à jour le status et la durée
-  async completeWorkout(id: string, duration: number): Promise<WorkoutResponse> {
-    const workout = await this.prisma.workout.update({
-      where: { id },
-      data: {
-        status: 'COMPLETED',
-        duration
-      },
-      include: {
-        exercises: true
-      }
-    })
+  async completeWorkout(id: string, duration: number): Promise<Workout> {
+    return this.prisma.$transaction(async (tx) => {
+      const workout = await tx.workout.update({
+        where: { id },
+        data: {
+          status: 'COMPLETED',
+          duration
+        }
+      });
 
-    return {
-      ...workout,
-      createdAt: workout.date,
-      exercises: workout.exercises
-    }
+      // Mettre à jour le temps total dans les stats
+      await tx.stats.update({
+        where: { userId: workout.userId },
+        data: {
+          totalTime: { increment: duration },
+          points: { increment: 50 } // Points bonus pour complétion
+        }
+      });
+
+      return workout;
+    });
   }
 
   // Nouveau
@@ -118,17 +124,36 @@ export class WorkoutService {
   }
 
   async deleteWorkout(id: string): Promise<void> {
-    // Utiliser une transaction pour supprimer les exercices et le workout
-    await this.prisma.$transaction([
-      // D'abord supprimer tous les exercices liés
-      this.prisma.exercise.deleteMany({
-        where: { workoutId: id }
-      }),
-      // Ensuite supprimer le workout
-      this.prisma.workout.delete({
+    return this.prisma.$transaction(async (tx) => {
+      // Récupérer le workout avant de le supprimer
+      const workout = await tx.workout.findUnique({
         where: { id }
-      })
-    ])
+      });
+
+      if (!workout) {
+        throw new Error('Workout non trouvé');
+      }
+
+      // Supprimer le workout
+      await tx.workout.delete({
+        where: { id }
+      });
+
+      // Recalculer les stats
+      const totalWorkouts = await tx.workout.count({
+        where: { userId: workout.userId }
+      });
+
+      // Mettre à jour les stats
+      await tx.stats.update({
+        where: { userId: workout.userId },
+        data: {
+          totalWorkouts,
+          totalTime: { decrement: workout.duration },
+          points: { decrement: 10 }
+        }
+      });
+    });
   }
 
   // PUT - Mise à jour complète

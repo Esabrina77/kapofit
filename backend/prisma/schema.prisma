@@ -15,109 +15,109 @@ datasource db {
 
 // Utilisateur
 model User {
-  id            String    @id @default(uuid())
-  email         String    @unique
-  firstName     String    // Prénom (obligatoire)
-  lastName      String    // Nom (obligatoire)
-  password      String?   // Le ? rend le champ nullable
-  imageUrl      String?   // Photo (optionnelle)
-  firebaseId    String?   @unique  // Optionnel maintenant
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  
+  id         String   @id @default(uuid())
+  email      String   @unique
+  firstName  String // Prénom (obligatoire)
+  lastName   String // Nom (obligatoire)
+  password   String? // Le ? rend le champ nullable
+  imageUrl   String? // Photo (optionnelle)
+  firebaseId String?  @unique // Optionnel maintenant
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
   // Relations
-  workouts      Workout[]
-  stats         Stats?
-  bodyInfo      BodyInfo?  // Renommé de Profile à BodyInfo
-  hostedSessions     LiveSession[] @relation("HostSessions")
-  joinedSessions     LiveSession[] @relation("ParticipantSessions")
-  completedLessons   Lesson[]      @relation("UserLessons")
+  workouts         Workout[]
+  stats            Stats?
+  bodyInfo         BodyInfo? // Renommé de Profile à BodyInfo
+  hostedSessions   LiveSession[] @relation("HostSessions")
+  joinedSessions   LiveSession[] @relation("ParticipantSessions")
+  completedLessons Lesson[]      @relation("UserLessons")
 }
 
 // Renommé de Profile à BodyInfo pour plus de clarté
 model BodyInfo {
-  id            String    @id @default(uuid())
-  userId        String    @unique
-  height        Float?    // Taille en cm (optionnel)
-  weight        Float?    // Poids en kg (optionnel)
-  goals         String[]  // Objectifs
-  level         String    @default("BEGINNER")
-  
+  id     String   @id @default(uuid())
+  userId String   @unique
+  height Float? // Taille en cm (optionnel)
+  weight Float? // Poids en kg (optionnel)
+  goals  String[] // Objectifs
+  level  String   @default("BEGINNER")
+
   // Relations
-  user          User      @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id])
 }
 
 // Séance d'entraînement
 model Workout {
-  id        String   @id @default(uuid())  // UUID auto-généré
+  id        String     @id @default(uuid()) // UUID auto-généré
   userId    String
-  date      DateTime @default(now())
+  date      DateTime   @default(now())
   duration  Int
   type      String
-  status    String   @default("IN_PROGRESS")
+  status    String     @default("IN_PROGRESS")
   exercises Exercise[]
-  user      User     @relation(fields: [userId], references: [id])
+  user      User       @relation(fields: [userId], references: [id])
 }
 
 // Exercice
 model Exercise {
-  id            String    @id @default(uuid())
-  workoutId     String?   // Optionnel maintenant
-  lessonId      String?   // Nouveau champ
-  name          String
-  sets          Int
-  reps          Int
-  score         Float?    // Score de performance
-  
+  id        String  @id @default(uuid())
+  workoutId String? // Optionnel maintenant
+  lessonId  String? // Nouveau champ
+  name      String
+  sets      Int
+  reps      Int
+  score     Float? // Score de performance
+
   // Relations
-  workout       Workout?  @relation(fields: [workoutId], references: [id])
-  lesson        Lesson?   @relation(fields: [lessonId], references: [id])
+  workout Workout? @relation(fields: [workoutId], references: [id])
+  lesson  Lesson?  @relation(fields: [lessonId], references: [id])
 }
 
 // Statistiques utilisateur
 model Stats {
-  id            String    @id @default(uuid())
-  userId        String    @unique
-  totalWorkouts Int       @default(0)
-  totalTime     Int       @default(0)  // en secondes
-  points        Int       @default(0)
-  level         Int       @default(1)
-  
+  id            String @id @default(uuid())
+  userId        String @unique
+  totalWorkouts Int    @default(0)
+  totalTime     Int    @default(0) // en secondes
+  points        Int    @default(0)
+  level         Int    @default(1)
+
   // Relations
-  user          User      @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id])
 }
 
 model Lesson {
-  id          String   @id @default(uuid())
-  title       String
-  type        String   // 'VIDEO' | 'AVATAR' | 'LIVE'
-  difficulty  String   // 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED'
-  duration    Int      // en minutes
-  videoUrl    String?  // pour les leçons vidéo
-  avatarData  Json?    // pour les leçons avec avatar
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id         String   @id @default(uuid())
+  title      String
+  type       String // 'VIDEO' | 'AVATAR' | 'LIVE'
+  difficulty String // 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED'
+  duration   Int // en minutes
+  videoUrl   String? // pour les leçons vidéo
+  avatarData Json? // pour les leçons avec avatar
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   // Relations
-  exercises   LessonExercise[]
-  users       User[]           @relation("UserLessons")
+  exercises        LessonExercise[]
+  users            User[]           @relation("UserLessons")
   workoutExercises Exercise[]
 }
 
 // Nouveau modèle pour les exercices de leçon
 model LessonExercise {
-  id          String   @id @default(uuid())
-  lessonId    String
-  name        String
-  sets        Int
-  reps        Int
-  duration    Int?     // en secondes, pour les exercices temporels
-  restTime    Int?     // en secondes
-  videoUrl    String?  // vidéo de démonstration
-  poseData    Json?    // données MediaPipe de référence
+  id       String  @id @default(uuid())
+  lessonId String
+  name     String
+  sets     Int
+  reps     Int
+  duration Int? // en secondes, pour les exercices temporels
+  restTime Int? // en secondes
+  videoUrl String? // vidéo de démonstration
+  poseData Json? // données MediaPipe de référence
 
   // Relations
-  lesson      Lesson   @relation(fields: [lessonId], references: [id])
+  lesson Lesson @relation(fields: [lessonId], references: [id])
 }
 
 model LiveSession {
@@ -126,11 +126,11 @@ model LiveSession {
   host          User     @relation("HostSessions", fields: [hostId], references: [id])
   participantId String?
   participant   User?    @relation("ParticipantSessions", fields: [participantId], references: [id])
-  status        String   // 'SCHEDULED' | 'LIVE' | 'COMPLETED'
+  status        String // 'SCHEDULED' | 'LIVE' | 'COMPLETED'
   startTime     DateTime
-  duration      Int?     // en minutes
+  duration      Int? // en minutes
   recordingUrl  String?
-  poseData      Json?    // données MediaPipe
+  poseData      Json? // données MediaPipe
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 }

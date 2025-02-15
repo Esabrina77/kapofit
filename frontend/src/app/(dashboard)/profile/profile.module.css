@@ -1,0 +1,150 @@
+body {
+  min-height: 100vh;
+}
+/* Effet glass inspiré de css.glass */
+.glass {
+  background: rgba(255, 255, 255, 0.07);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.profileHeader {
+  background: rgba(137, 108, 254, 0.1);
+  border-radius: 24px;
+  backdrop-filter: blur(8.4px);
+  -webkit-backdrop-filter: blur(8.4px);
+  border: 1px solid rgba(179, 160, 255, 0.2);
+}
+
+.statsCard {
+  background: rgba(137, 108, 254, 0.07);
+  border-radius: 16px;
+  backdrop-filter: blur(8.4px);
+  -webkit-backdrop-filter: blur(8.4px);
+  border: 1px solid rgba(179, 160, 255, 0.1);
+  transition: transform 0.3s ease;
+  position: relative;
+}
+
+.statsCard::after {
+  content: '';
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 8px;
+  height: 8px;
+  background: var(--purple);
+  border-radius: 50%;
+  box-shadow: 0 0 10px var(--purple);
+}
+
+.statsCard:hover {
+  transform: translateY(-5px);
+}
+
+.statsCard.primary {
+  background: rgba(137, 108, 254, 0.1);
+}
+
+.statsCard.secondary {
+  background: rgba(226, 241, 99, 0.05);
+}
+
+.editButton {
+  color: var(--lime);
+  transition: opacity 0.2s;
+}
+
+.editButton:hover {
+  opacity: 0.8;
+}
+
+.label {
+  color: var(--light-purple);
+  font-size: 0.9rem;
+}
+
+.value {
+  color: var(--white);
+  font-weight: 600;
+}
+
+.header {
+  margin-bottom: 2rem;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--white);
+}
+
+.profileCard {
+  background: var(--glass-bg);
+  border-radius: 1rem;
+  padding: 2rem;
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--glass-border);
+}
+
+.avatarSection {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--purple);
+}
+
+.infoSection {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.infoSection h2 {
+  font-size: 1.5rem;
+  color: var(--white);
+  margin-bottom: 0.5rem;
+}
+
+.infoSection p {
+  color: var(--light-purple);
+}
+
+.statsSection {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.statsSection h3 {
+  color: var(--white);
+  margin-bottom: 0.5rem;
+}
+
+.statsSection p {
+  color: var(--light-purple);
+}
+
+.editButton {
+  width: 100%;
+  background: var(--purple);
+  color: var(--white);
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s;
+}
+
+.editButton:hover {
+  background: rgba(137, 108, 254, 0.8);
+} 

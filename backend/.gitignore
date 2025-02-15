@@ -5,7 +5,6 @@
 .env
 .env.*
 !.env.example
-backend/src/config/firebase-service-account.json
 
 # Dependencies
 node_modules/
@@ -16,3 +15,6 @@ node_modules/
 !.yarn/plugins
 !.yarn/releases
 !.yarn/versions
+
+# Firebase
+src/secrets/firebase-service-account.json

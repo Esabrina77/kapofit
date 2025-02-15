@@ -2,11 +2,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import { auth } from "@/lib/firebase/firebase";
-import { createUserWithEmailAndPassword , GoogleAuthProvider , signInWithPopup } from "firebase/auth";
+import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { ToastContainer, toast } from 'react-toastify';
+import axios from 'axios';
 import 'react-toastify/dist/ReactToastify.css';
-
 
 export default function RegisterPage() {
     const router = useRouter();
@@ -56,25 +56,20 @@ export default function RegisterPage() {
       const result = await signInWithPopup(auth, provider);
       
       if (result.user) {
-        // Créer l'utilisateur dans notre base de données
-        const response = await fetch('http://localhost:3002/api/users', {
-          method: 'POST',
+        const token = await result.user.getIdToken();
+        
+        // Utiliser la route sync-firebase
+        await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/users/sync-firebase`, {
+          email: result.user.email,
+          displayName: result.user.displayName,
+          photoURL: result.user.photoURL,
+          uid: result.user.uid
+        }, {
           headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${await result.user.getIdToken()}`
-          },
-          body: JSON.stringify({
-            email: result.user.email,
-            firstName: result.user.displayName?.split(' ')[0] || '',
-            lastName: result.user.displayName?.split(' ')[1] || '',
-            firebaseId: result.user.uid,
-            imageUrl: result.user.photoURL
-          })
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
         });
-
-        if (!response.ok) {
-          throw new Error('Erreur création profil');
-        }
 
         router.push('/dashboard');
       }

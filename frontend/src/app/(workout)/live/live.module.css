@@ -1,0 +1,138 @@
+.container {
+  padding: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 3rem;
+  color: var(--white);
+}
+
+/* Grille de sélection du type */
+.typeGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.typeButton {
+  background: var(--glass-bg);
+  padding: 2rem;
+  border-radius: 1rem;
+  font-size: 1.2rem;
+  color: var(--white);
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.typeButton:hover {
+  border-color: var(--purple);
+  transform: translateY(-4px);
+}
+
+/* Info workout en cours */
+.workoutInfo {
+  background: var(--glass-bg);
+  border-radius: 1rem;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.type {
+  display: inline-block;
+  background: rgba(137, 108, 254, 0.2);
+  color: var(--purple);
+  padding: 0.5rem 1.5rem;
+  border-radius: 2rem;
+  margin-bottom: 1.5rem;
+  font-weight: 500;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stat span {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+}
+
+.stat strong {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: var(--white);
+  font-family: monospace;
+}
+
+/* Contrôles */
+.controls {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.controlButton, 
+.finishButton {
+  padding: 1rem 2rem;
+  border-radius: 0.5rem;
+  font-size: 1.2rem;
+  min-width: 140px;
+  transition: all 0.3s ease;
+}
+
+.controlButton {
+  background: var(--purple);
+  color: white;
+}
+
+.finishButton {
+  background: var(--red);
+  color: white;
+}
+
+.controlButton:hover, 
+.finishButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.controlButton:active, 
+.finishButton:active {
+  transform: translateY(0);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .stats {
+    
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .controls {
+    flex-direction: column;
+  }
+
+  .controlButton, 
+  .finishButton {
+    width: 100%;
+  }
+} 

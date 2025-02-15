@@ -5,11 +5,11 @@ export interface Exercise {
   score?: number | null;
 }
 
-export interface CreateWorkoutDTO {
-  userId: string;
-  type: 'SOLO' | 'DUO';
-  exercises: Exercise[];
-}
+// export interface CreateWorkoutDTO {
+//   userId: string;
+//   type: 'SOLO' | 'DUO';
+//   exercises: Exercise[];
+// }
 
 export interface WorkoutResponse {
   id: string;

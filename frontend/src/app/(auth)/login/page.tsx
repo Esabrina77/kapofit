@@ -6,7 +6,7 @@ import { auth } from '@/lib/firebase/firebase';
 import { signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
 import { FirebaseError } from 'firebase/app';
-
+import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -26,7 +26,18 @@ export default function LoginPage() {
       
       if (result.user) {
         const token = await result.user.getIdToken();
-        console.log('🔑 Token:', token);
+        // Synchroniser avec le backend
+        await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/users/sync-firebase`, {
+          email: result.user.email,
+          displayName: result.user.displayName,
+          photoURL: result.user.photoURL,
+          uid: result.user.uid
+        }, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        
         router.push('/dashboard');
       }
     } catch (error) {
@@ -54,14 +65,33 @@ export default function LoginPage() {
   const handleGoogleSignIn = async () => {
     try {
       const provider = new GoogleAuthProvider();
-      const result = await signInWithPopup(auth, provider);
-      if (result.user) {
-        const token = await result.user.getIdToken();
-        console.log('🔑 Token:', token);
-        router.push("/dashboard");
+      const userCredential = await signInWithPopup(auth, provider);
+      const token = await userCredential.user.getIdToken();
+
+      // Synchronisation avec notre backend
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/users/sync-firebase`,
+        {
+          email: userCredential.user.email,
+          firebaseId: userCredential.user.uid,
+          displayName: userCredential.user.displayName,
+          photoURL: userCredential.user.photoURL
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+
+      if (response.data) {
+        router.push('/dashboard');
       }
     } catch (error) {
-      console.error("Erreur lors de la connexion avec Google:", error);
+      console.error('Erreur Google Sign In:', error);
+      // Afficher un message d'erreur à l'utilisateur
+      toast.error("Erreur lors de la connexion avec Google");
     }
   };
 

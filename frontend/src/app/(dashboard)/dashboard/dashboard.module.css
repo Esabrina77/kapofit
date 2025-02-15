@@ -1,0 +1,112 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--white);
+}
+
+.subtitle {
+  color: var(--light-purple);
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+@media (min-width: 768px) {
+  .statsGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.statsCard {
+  background: var(--glass-bg);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  position: relative;
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--glass-border);
+}
+
+.statsDot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  box-shadow: 0 0 15px var(--purple);
+  background: var(--purple);
+}
+
+.statsIcon {
+  color: var(--purple);
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.statsValue {
+  font-size: 1.875rem;
+  font-weight: bold;
+  color: var(--white);
+}
+
+.statsLabel {
+  color: var(--light-purple);
+}
+
+.todayPlan {
+  background: var(--glass-bg);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--glass-border);
+}
+
+.planTitle {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: var(--white);
+  margin-bottom: 1rem;
+}
+
+.planCard {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.planInfo {
+  color: var(--white);
+  font-weight: 500;
+}
+
+.planSubtext {
+  color: var(--light-purple);
+  font-size: 0.875rem;
+}
+
+.startButton {
+  background: var(--purple);
+  color: var(--white);
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s;
+}
+
+.startButton:hover {
+  background: rgba(137, 108, 254, 0.8);
+} 

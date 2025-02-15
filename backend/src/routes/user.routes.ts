@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { UserController } from '../controllers/user.controller';
 import { validateUser } from '../middleware/validation.middleware';
+import { authMiddleware } from '../middleware/auth.middleware';
 
 const router = Router();
 const userController = new UserController();
@@ -38,7 +39,14 @@ router.post('/', validateUser, userController.createUser);
 
 router.post('/verify', userController.verifyUser);
 
-router.get('/:id', userController.getUserProfile);
-router.put('/:id', userController.updateUserProfile);
+router.get('/', authMiddleware, userController.getAllUsers);
+router.get('/:id', authMiddleware, userController.getUserById);
+router.put('/:id', authMiddleware, userController.updateUser);
+router.delete('/:id', authMiddleware, userController.deleteUser);
+
+router.post('/sync-firebase', userController.syncFirebaseUser);
+router.post('/:id/sync-stats', authMiddleware, userController.syncUserStats);
+
+router.post('/sync', authMiddleware, userController.syncFirebaseUser);
 
 export default router;

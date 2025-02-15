@@ -13,7 +13,7 @@ export const initializeFirebase = () => {
     })
   } else {
     // En développement, utiliser le fichier de service
-    const serviceAccount = require('./firebase-service-account.json')
+    const serviceAccount = require('../secrets/firebase-service-account.json')
     admin.initializeApp({
       credential: admin.credential.cert(serviceAccount)
     })

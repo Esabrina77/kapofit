@@ -11,26 +11,21 @@ export class WorkoutController {
       const data = req.body
 
       // Validation des données requises
-      if (!data.userId || !data.type || !Array.isArray(data.exercises)) {
+      if (!data.userId || !data.type || data.type.trim() === '') {
         return res.status(400).json({ 
-          error: "Les champs userId, type et exercises sont requis" 
+          error: "Les champs userId et type sont requis et ne peuvent pas être vides" 
         })
       }
 
-      // Validation des exercices
-      if (!data.exercises.every((e: any) => e.name && e.sets > 0 && e.reps > 0)) {
-        return res.status(400).json({ 
-          error: "Chaque exercice doit avoir un nom et des valeurs positives" 
-        })
-      }
+      const workout = await workoutService.createWorkout(data.userId, {
+        type: data.type,
+        duration: data.duration || 0
+      })
 
-      console.log('📥 Received workout request:', data)
-      const workout = await workoutService.createWorkout(data)
-      console.log('✅ Workout created:', workout)
-      res.status(201).json(workout)
+      return res.status(201).json(workout)
     } catch (error) {
       console.error('❌ Error creating workout:', error)
-      res.status(500).json({ error: "Erreur lors de la création du workout" })
+      return res.status(500).json({ error: "Erreur lors de la création du workout" })
     }
   }
 

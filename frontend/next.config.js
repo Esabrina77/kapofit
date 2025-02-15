@@ -1,4 +1,11 @@
+/** @type {import('next').NextConfig} */
 const nextConfig = {
+  images: {
+    domains: [
+      'lh3.googleusercontent.com',  // Pour les photos de profil Google
+      'firebasestorage.googleapis.com'  // Pour Firebase Storage si on l'utilise plus tard
+    ],
+  },
   async headers() {
     return [
       {
@@ -12,4 +19,6 @@ const nextConfig = {
       }
     ]
   }
-} 
+}
+
+module.exports = nextConfig 
