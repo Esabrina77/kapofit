@@ -29,6 +29,9 @@ model User {
   workouts      Workout[]
   stats         Stats?
   bodyInfo      BodyInfo?  // Renommé de Profile à BodyInfo
+  hostedSessions     LiveSession[] @relation("HostSessions")
+  joinedSessions     LiveSession[] @relation("ParticipantSessions")
+  completedLessons   Lesson[]      @relation("UserLessons")
 }
 
 // Renommé de Profile à BodyInfo pour plus de clarté
@@ -46,29 +49,29 @@ model BodyInfo {
 
 // Séance d'entraînement
 model Workout {
-  id            String    @id @default(uuid())
-  userId        String
-  date          DateTime  @default(now())
-  duration      Int       // en secondes
-  type          String    // "SOLO" ou "DUO"
-  status        String    @default("IN_PROGRESS") // "IN_PROGRESS", "COMPLETED", "CANCELLED"
-  
-  // Relations
-  user          User      @relation(fields: [userId], references: [id])
-  exercises     Exercise[]
+  id        String   @id @default(uuid())  // UUID auto-généré
+  userId    String
+  date      DateTime @default(now())
+  duration  Int
+  type      String
+  status    String   @default("IN_PROGRESS")
+  exercises Exercise[]
+  user      User     @relation(fields: [userId], references: [id])
 }
 
 // Exercice
 model Exercise {
   id            String    @id @default(uuid())
-  workoutId     String
+  workoutId     String?   // Optionnel maintenant
+  lessonId      String?   // Nouveau champ
   name          String
   sets          Int
   reps          Int
   score         Float?    // Score de performance
   
   // Relations
-  workout       Workout   @relation(fields: [workoutId], references: [id])
+  workout       Workout?  @relation(fields: [workoutId], references: [id])
+  lesson        Lesson?   @relation(fields: [lessonId], references: [id])
 }
 
 // Statistiques utilisateur
@@ -82,4 +85,52 @@ model Stats {
   
   // Relations
   user          User      @relation(fields: [userId], references: [id])
+}
+
+model Lesson {
+  id          String   @id @default(uuid())
+  title       String
+  type        String   // 'VIDEO' | 'AVATAR' | 'LIVE'
+  difficulty  String   // 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED'
+  duration    Int      // en minutes
+  videoUrl    String?  // pour les leçons vidéo
+  avatarData  Json?    // pour les leçons avec avatar
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  exercises   LessonExercise[]
+  users       User[]           @relation("UserLessons")
+  workoutExercises Exercise[]
+}
+
+// Nouveau modèle pour les exercices de leçon
+model LessonExercise {
+  id          String   @id @default(uuid())
+  lessonId    String
+  name        String
+  sets        Int
+  reps        Int
+  duration    Int?     // en secondes, pour les exercices temporels
+  restTime    Int?     // en secondes
+  videoUrl    String?  // vidéo de démonstration
+  poseData    Json?    // données MediaPipe de référence
+
+  // Relations
+  lesson      Lesson   @relation(fields: [lessonId], references: [id])
+}
+
+model LiveSession {
+  id            String   @id @default(uuid())
+  hostId        String
+  host          User     @relation("HostSessions", fields: [hostId], references: [id])
+  participantId String?
+  participant   User?    @relation("ParticipantSessions", fields: [participantId], references: [id])
+  status        String   // 'SCHEDULED' | 'LIVE' | 'COMPLETED'
+  startTime     DateTime
+  duration      Int?     // en minutes
+  recordingUrl  String?
+  poseData      Json?    // données MediaPipe
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }
