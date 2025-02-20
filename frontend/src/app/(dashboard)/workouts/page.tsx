@@ -2,7 +2,6 @@
 import { useAuth } from "@/hooks/useAuth";
 import styles from "./workouts.module.css";
 import Link from "next/link";
-
 export default function WorkoutsPage() {
   const { user } = useAuth();
 
@@ -10,12 +9,22 @@ export default function WorkoutsPage() {
     <div className={styles.container}>
       <h1 className={styles.title}>Workouts</h1>
 
+      {/* Section Avatar */}
+      <section className={styles.avatarSection}>
+ 
+      </section>
+
       {/* Section Démarrer un workout */}
       <section className={styles.startSection}>
         <h2>Commencer un workout</h2>
-        <Link href="/live" className={styles.startButton}>
-          Démarrer une session      
-        </Link>
+        <div className={styles.startButtons}>
+          <Link href="/live" className={styles.startButton}>
+            Solo Session
+          </Link>
+          <Link href="/workouts/call" className={styles.callButton}>
+            Video Call Session
+          </Link>
+        </div>
       </section>
 
       {/* Section Historique */}

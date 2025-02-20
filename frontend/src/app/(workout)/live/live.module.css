@@ -8,7 +8,7 @@
 .title {
   font-size: 2rem;
   font-weight: bold;
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
   color: var(--white);
 }
 
@@ -35,12 +35,17 @@
   transform: translateY(-4px);
 }
 
+/* Détecteur de pose */
+.poseDetector {
+  margin-top: 2rem;
+}
+
 /* Info workout en cours */
 .workoutInfo {
   background: var(--glass-bg);
   border-radius: 1rem;
   padding: 2rem;
-  margin-bottom: 2rem;
+  margin-top: 2rem;
 }
 
 .type {
@@ -83,6 +88,7 @@
   display: flex;
   gap: 1rem;
   justify-content: center;
+  margin-top: 2rem;
 }
 
 .controlButton, 
@@ -121,8 +127,26 @@
     padding: 1rem;
   }
 
+  .title {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .typeGrid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+  }
+
+  .typeButton {
+    padding: 1.5rem;
+    font-size: 1rem;
+  }
+
+  .workoutInfo {
+    padding: 1.5rem;
+  }
+
   .stats {
-    
     grid-template-columns: 1fr;
     gap: 1rem;
   }

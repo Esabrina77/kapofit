@@ -1,6 +1,7 @@
-import app from './app'
+import { server } from './app'
+import { config } from './config'
 
-const PORT = 3001
+const PORT = config.port || 3002
 
 // Gestion des erreurs non capturées
 process.on('uncaughtException', (error) => {
@@ -8,9 +9,9 @@ process.on('uncaughtException', (error) => {
   process.exit(1)
 })
 
-// Démarrage du serveur
-app.listen(PORT, () => {
+// Démarrage du serveur (une seule fois)
+server.listen(PORT, () => {
   console.log(`🚀 Server is running at http://localhost:${PORT}`)
   console.log('📝 Ready to handle workout requests!')
-  console.log(`🔌 Connected to database: ${process.env.DATABASE_URL}`)
+  console.log('🔌 Socket.IO server is ready')
 }) 

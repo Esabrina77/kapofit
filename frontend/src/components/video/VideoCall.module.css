@@ -1,0 +1,68 @@
+.videoContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+  padding: 1rem;
+  width: 100%;
+  height: 600px;
+  background: var(--glass-bg);
+  border-radius: 1rem;
+  backdrop-filter: blur(8px);
+}
+
+.video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.2);
+  transform: scaleX(-1);
+}
+
+.controls {
+  position: absolute;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 1rem;
+  padding: 0.5rem;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 2rem;
+}
+
+.controlButton {
+  padding: 0.5rem;
+  border-radius: 50%;
+  background: var(--purple);
+  color: white;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.controlButton:hover {
+  transform: scale(1.1);
+  background: var(--purple-dark);
+}
+
+.controlButton.disabled {
+  background: #666;
+}
+
+.controlButton.active {
+  background: var(--green);
+}
+
+.endCall {
+  background: var(--red) !important;
+}
+
+.endCall:hover {
+  background: var(--red-dark) !important;
+} 

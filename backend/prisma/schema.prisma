@@ -29,8 +29,8 @@ model User {
   workouts         Workout[]
   stats            Stats?
   bodyInfo         BodyInfo? // Renommé de Profile à BodyInfo
-  hostedSessions   LiveSession[] @relation("HostSessions")
-  joinedSessions   LiveSession[] @relation("ParticipantSessions")
+  hostedSessions   Session[] @relation("SessionHost")
+  guestSessions    Session[] @relation("SessionGuest")
   completedLessons Lesson[]      @relation("UserLessons")
 }
 
@@ -120,17 +120,14 @@ model LessonExercise {
   lesson Lesson @relation(fields: [lessonId], references: [id])
 }
 
-model LiveSession {
-  id            String   @id @default(uuid())
-  hostId        String
-  host          User     @relation("HostSessions", fields: [hostId], references: [id])
-  participantId String?
-  participant   User?    @relation("ParticipantSessions", fields: [participantId], references: [id])
-  status        String // 'SCHEDULED' | 'LIVE' | 'COMPLETED'
-  startTime     DateTime
-  duration      Int? // en minutes
-  recordingUrl  String?
-  poseData      Json? // données MediaPipe
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+model Session {
+  id        String   @id @default(uuid())
+  roomId    String   @unique
+  hostId    String
+  host      User     @relation("SessionHost", fields: [hostId], references: [id])
+  guestId   String?
+  guest     User?    @relation("SessionGuest", fields: [guestId], references: [id])
+  status    String   @default("waiting") // waiting, active, ended
+  startTime DateTime @default(now())
+  endTime   DateTime?
 }

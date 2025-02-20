@@ -1,0 +1,36 @@
+.container {
+  position: relative;
+  width: 640px;
+  height: 480px;
+  margin: 0 auto;
+}
+
+.video {
+  width: 100%;
+  height: 100%;
+  display: block;
+  transform: scaleX(-1);
+}
+
+.canvas {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  transform: scaleX(-1);
+}
+
+.loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.5rem;
+  color: var(--white);
+  background: var(--glass-bg);
+  padding: 1rem 2rem;
+  border-radius: 1rem;
+  z-index: 10;
+}
