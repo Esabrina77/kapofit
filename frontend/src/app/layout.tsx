@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import ThemeToggle from "@/components/theme/ThemeToggle";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -30,6 +31,10 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        
+        <div className="fixed top-4 right-4 z-50 position-relative">
+          <ThemeToggle />
+        </div>
         {children}
       </body>
     </html>

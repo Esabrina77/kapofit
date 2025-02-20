@@ -1,0 +1,277 @@
+.main {
+  min-height: 100vh;
+}
+
+/* Hero Section */
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6rem 2rem;
+  gap: 4rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.heroContent {
+  flex: 1;
+}
+.heroImage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-height: 90%;
+
+}
+
+.title {
+  font-size: 4rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.subtitle {
+  font-size: 1.5rem;
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+}
+
+.cta {
+  display: flex;
+  gap: 1rem;
+}
+
+/* Buttons */
+.primaryButton {
+  background: var(--gradient-primary);
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  font-weight: 600;
+  transition: transform var(--transition-fast);
+}
+
+.primaryButton:hover {
+  transform: scale(1.05);
+}
+
+.secondaryButton {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  color: var(--text-primary);
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  font-weight: 600;
+  transition: all var(--transition-fast);
+}
+
+.secondaryButton:hover {
+  background: var(--glass-bg-hover);
+  border-color: var(--glass-border-hover);
+}
+
+/* Features Section */
+.features {
+  padding: 3rem 2rem;
+  margin:1rem;
+  background: rgba(172, 57, 8, 0.06);
+}
+
+.sectionTitle {
+  font-size: 2.5rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 3rem;
+  color: var(--text-primary);
+}
+
+.featureGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.featureCard {
+  background: var(--card-bg);
+  padding: 2rem;
+  border-radius: 24px;
+  border: 1px solid var(--card-border);
+  transition: transform var(--transition-normal);
+  text-align: center;
+}
+
+.featureCard:hover {
+  transform: translateY(-8px);
+}
+
+.featureIcon {
+  font-size: 2rem;
+  color: var(--primary);
+  margin-bottom: 1rem;
+}
+
+/* How It Works */
+.howItWorks {
+  padding: 6rem 2rem;
+}
+
+.stepsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.step {
+  text-align: center;
+  padding: 2rem;
+}
+
+.stepNumber {
+  width: 40px;
+  height: 40px;
+  background: var(--gradient-primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  margin: 0 auto 1rem;
+}
+
+/* Testimonials */
+.testimonials {
+  padding: 6rem 2rem;
+  background: var(--glass-bg);
+}
+
+.testimonialGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.testimonialCard {
+  background: var(--card-bg);
+  padding: 2rem;
+  border-radius: 24px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width:100%,
+}
+.testimonialCard p{
+  margin:30px;
+}
+
+.testimonialImage {
+  border-radius: 50%;
+  margin-bottom: 1rem;
+}
+
+/* Pricing */
+.pricing {
+  padding: 6rem 2rem;
+}
+
+.pricingGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.pricingCard {
+  background: var(--card-bg);
+  padding: 2rem;
+  border-radius: 24px;
+  text-align: center;
+  position: relative;
+}
+
+.featured {
+  border: 2px solid var(--primary);
+  transform: scale(1.05);
+}
+
+.featuredBadge {
+  position: absolute;
+  top: -12px;
+  right: 20px;
+  background: var(--gradient-primary);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+}
+
+/* Final CTA */
+.finalCta {
+  padding: 6rem 2rem;
+  text-align: center;
+  background: var(--glass-bg);
+}
+
+.ctaButtons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .hero {
+    flex-direction: column;
+    text-align: center;
+    padding: 4rem 1rem;
+  }
+
+  .title {
+    font-size: 2.5rem;
+  }
+
+  .cta {
+    justify-content: center;
+  }
+
+  .sectionTitle {
+    font-size: 2rem;
+  }
+
+  .pricingCard.featured {
+    transform: none;
+  }
+}
+
+/* Animations */
+.floatingImage {
+  animation: float 6s ease-in-out infinite;
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+} 

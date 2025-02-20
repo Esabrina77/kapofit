@@ -11,9 +11,11 @@ export default function DashboardLayout({
   const pathname = usePathname();
 
   const navItems = [
+    { href: '/', label: 'Home', icon: '🏠' },
     { href: '/dashboard', label: 'Dashboard', icon: '📊' },
     { href: '/profile', label: 'Profile', icon: '👤' },
     { href: '/workouts', label: 'Workouts', icon: '🏋️‍♂️' },
+    { href: '/settings', label: 'Settings', icon: '⚙️' },
   ];
 
   return (

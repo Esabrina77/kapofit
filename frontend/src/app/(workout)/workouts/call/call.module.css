@@ -70,4 +70,31 @@
   margin: 1rem 0;
   font-family: monospace;
   color: var(--purple);
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0;
+    margin: 0;
+    max-width: 100%;
+  }
+
+  .title, .actions, .buttons, .joinForm {
+    display: none; /* Cache tous les éléments sauf la vidéo sur mobile */
+  }
+
+  /* Style spécial pour le code de salle sur mobile */
+  .roomCode {
+    position: absolute;
+    top: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.5);
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    margin: 0;
+    backdrop-filter: blur(8px);
+    z-index: 30;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
 } 

@@ -1,53 +1,256 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');  
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
-
 :root {
-  /* Couleurs principales */
-  --black: #232323;
-  --white: #FFFFFF;
-  --purple: #896CFE;
-  --light-purple: #B3A0FF;
-  --lime: #E2F163;
+  /* Couleurs de base - Plus énergiques et sportives */
+  --primary: #FF4D00;
+  /* Orange vif énergique */
+  --secondary: #00E1FF;
+  /* Bleu électrique */
+  --accent: #3DFFA3;
+  /* Vert néon */
+  --success: #00E676;
+  /* Vert vif */
+  --warning: #FFD600;
+  /* Jaune électrique */
+  --error: #FF1744;
+  /* Rouge vif */
 
-  /* Variantes avec transparence pour glassmorphism */
-  --glass-bg: rgba(137, 108, 254, 0.1);  /* Purple avec transparence */
-  --glass-border: rgba(179, 160, 255, 0.2); /* Light Purple avec transparence */
-  
-  /* Text */
-  --text-primary: var(--white);
-  --text-secondary: var(--light-purple);
-  --text-accent: var(--lime);
+  /* Dégradés dynamiques */
+  --gradient-primary: linear-gradient(135deg, #FF4D00 0%, #FF1744 100%);
+  --gradient-accent: linear-gradient(135deg, #00E1FF 0%, #3DFFA3 100%);
+
+  /* Transitions */
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.3s ease;
+  --transition-slow: 0.5s ease;
 }
 
+/* Thème sombre (par défaut) */
+[data-theme="dark"] {
+  /* Couleurs de fond */
+  --background-primary: #1a1a1a;
+  --background-secondary: #2d1f3d;
+  --background-gradient: linear-gradient(135deg,
+      #1a1a1a 35%,
+      #309aaa 65%);
+
+  /* Couleurs de texte */
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.7);
+  --text-tertiary: rgba(255, 255, 255, 0.5);
+
+  /* Effets glassmorphism */
+  --glass-bg: rgba(255, 255, 255, 0.1);
+  --glass-border: rgba(255, 255, 255, 0.2);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+
+  /* Couleurs des cartes */
+  --card-bg: rgba(255, 255, 255, 0.1);
+  --card-border: rgba(255, 255, 255, 0.1);
+  --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+/* Thème clair */
+[data-theme="light"] {
+  /* Couleurs de fond */
+  --background-primary: #f8f9fa;
+  --background-secondary: #e9ecef;
+  --background-gradient: linear-gradient(135deg,
+      rgba(255, 47, 0, 0.313) 35%,
+      rgba(61, 255, 164, 0.38) 65%);
+
+  /* Couleurs de texte */
+  --text-primary: #1a1a1a;
+  --text-secondary: rgba(0, 0, 0, 0.7);
+  --text-tertiary: rgba(0, 0, 0, 0.5);
+
+  /* Effets glassmorphism */
+  --glass-bg: rgba(255, 255, 255, 0.435);
+  --glass-border: rgba(0, 225, 255, 0.2);
+  --glass-shadow: 0 8px 32px rgba(255, 77, 0, 0.1);
+
+  /* Couleurs des cartes */
+  --card-bg: rgba(255, 255, 255, 0.95);
+  --card-border: rgba(0, 225, 255, 0.2);
+  --card-shadow: 0 8px 32px rgba(61, 255, 163, 0.1);
+
+  /* Dégradés spéciaux */
+  --gradient-card: linear-gradient(135deg,
+      rgba(255, 77, 0, 0.1) 0%,
+      rgba(0, 225, 255, 0.1) 50%,
+      rgba(61, 255, 163, 0.1) 100%);
+
+  /* Boutons et éléments interactifs */
+  --button-gradient: linear-gradient(135deg,
+      var(--primary) 0%,
+      var(--secondary) 100%);
+  --button-hover: linear-gradient(135deg,
+      var(--secondary) 0%,
+      var(--accent) 100%);
+
+  /* Surbrillances et accents */
+  --highlight-primary: var(--primary);
+  --highlight-secondary: var(--secondary);
+  --highlight-accent: var(--accent);
+}
+
+/* Animation du background */
+@keyframes gradientMove {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Style de base */
 body {
-  font-family: 'Poppins', sans-serif;
-  background-color: var(--black);
-  color: var(--white);
   min-height: 100vh;
+  color: var(--text-primary);
+  font-family: 'Poppins', sans-serif;
+  background-size: 400% 400%;
+  /* Augmenté pour plus d'amplitude */
+  animation: gradientMove 15s ease infinite;
+  /* Légèrement plus rapide */
 }
 
-/* Effet glass moderne */
-.glass {
-  background: var(--glass-bg);
+/* Thème sombre - garde le même dégradé */
+[data-theme="dark"] body {
+  background: linear-gradient(135deg,
+   #1e1e1e 35%,
+    #184953d0 65%);
+  background-size: 400% 400%;
+  animation: gradientMove 20s ease infinite;
+}
+
+/* Thème clair - garde le même dégradé */
+[data-theme="light"] body {
+  background: linear-gradient(135deg,
+      rgba(250, 59, 16, 0.405) 35%,
+      rgba(45, 219, 138, 0.414) 65%);
+  background-size: 400% 400%;
+  animation: gradientMove 20s ease infinite;
+}
+
+/* Composants réutilisables */
+.card {
+  background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--card-border);
   border-radius: 24px;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  box-shadow: var(--card-shadow);
+  transition: transform var(--transition-normal);
+}
+
+.card:hover {
+  transform: translateY(-4px);
+}
+
+/* Boutons */
+.button {
+  background: var(--gradient-primary);
+  border: none;
+  border-radius: 12px;
+  color: white;
+  padding: 12px 24px;
+  font-weight: 600;
+  transition: all var(--transition-fast);
+}
+
+.button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 15px rgba(124, 77, 255, 0.4);
+}
+
+.button-secondary {
+  background: var(--glass-bg);
   border: 1px solid var(--glass-border);
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  color: var(--text-primary);
 }
 
-/* Effets lumineux */
-.neon-purple {
-  box-shadow: 0 0 15px theme('colors.purple');
+/* Badges */
+.badge {
+  background: var(--gradient-accent);
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: white;
 }
 
-.neon-lime {
-  box-shadow: 0 0 15px theme('colors.lime');
+/* Animations */
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Effets de survol */
+.hover-scale {
+  transition: transform var(--transition-fast);
+}
+
+.hover-scale:hover {
+  transform: scale(1.05);
+}
+
+/* Icônes */
+.icon {
+  transition: all var(--transition-fast);
+  color: var(--text-primary);
+}
+
+.icon:hover {
+  transform: scale(1.2);
+  filter: brightness(1.2);
+}
+
+/* Utilitaires de texte */
+.text-gradient {
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Classes d'espacement communes */
+.section {
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+/* Classes de mise en page */
+.container-fluid {
+  width: 100%;
+  padding-right: 1rem;
+  padding-left: 1rem;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
 }
