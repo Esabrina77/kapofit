@@ -6,16 +6,16 @@ interface QualityIndicatorProps {
   stream: MediaStream;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function QualityIndicator({ stream }: QualityIndicatorProps) {
   const [quality, setQuality] = useState<'excellent' | 'good' | 'medium' | 'poor'>('good');
   const [isVisible, setIsVisible] = useState(false);
   const [lastQuality, setLastQuality] = useState<string>('good');
 
   useEffect(() => {
-    let interval: NodeJS.Timeout;
-    
     const checkQuality = () => {
-      // Simulé pour l'exemple - à remplacer par de vraies stats WebRTC
+      // Pour l'instant on utilise une simulation
+      // TODO: Implémenter la vraie qualité avec stream.getTracks() et RTCPeerConnection.getStats()
       const randomQuality = Math.random();
       let newQuality: 'excellent' | 'good' | 'medium' | 'poor';
       
@@ -29,7 +29,6 @@ export default function QualityIndicator({ stream }: QualityIndicatorProps) {
         newQuality = 'poor';
       }
 
-      // Montrer l'indicateur uniquement si la qualité se dégrade
       if (
         (lastQuality === 'excellent' && newQuality !== 'excellent') ||
         (lastQuality === 'good' && (newQuality === 'medium' || newQuality === 'poor')) ||
@@ -43,7 +42,7 @@ export default function QualityIndicator({ stream }: QualityIndicatorProps) {
       setLastQuality(newQuality);
     };
 
-    interval = setInterval(checkQuality, 10000); // Vérifie toutes les 10 secondes
+    const interval = setInterval(checkQuality, 10000);
     return () => clearInterval(interval);
   }, [lastQuality]);
 

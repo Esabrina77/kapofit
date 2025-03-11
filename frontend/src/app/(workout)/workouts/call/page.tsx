@@ -18,8 +18,8 @@ export default function WorkoutCallPage() {
       setIsInCall(true);
       toast.success('Salle créée avec succès');
       
-    } catch (error) {
-      toast.error('Erreur lors de la création de la salle');
+    } catch {
+      console.log('Erreur lors de la connexion');
     }
   };
 
@@ -40,7 +40,11 @@ export default function WorkoutCallPage() {
         <div className={styles.roomInfo}>
           <p>Code de la salle : <span className={styles.roomCode}>{roomId}</span></p>
         </div>
-        <VideoCall roomId={roomId} userId={user.id} />
+        <VideoCall 
+          roomId={roomId} 
+          userId={user.id} 
+          userName={user.firstName || 'Utilisateur'} 
+        />
       </div>
     );
   }

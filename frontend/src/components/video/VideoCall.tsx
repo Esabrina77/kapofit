@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { io, Socket } from 'socket.io-client';
 import styles from './VideoCall.module.css';
 import { toast } from 'react-hot-toast';
@@ -35,27 +35,12 @@ export default function VideoCall({ roomId, userId, userName }: VideoCallProps) 
   }>>([]);
   const [isPipMode, setIsPipMode] = useState(false);
 
-  useEffect(() => {
-    initializeCall();
-    return () => cleanupCall();
-  }, [roomId, userId]);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsPipMode(window.innerWidth <= 768);
-    };
-
-    // Vérifier la taille initiale
-    handleResize();
-
-    // Ajouter l'écouteur d'événement
-    window.addEventListener('resize', handleResize);
-
-    // Nettoyer l'écouteur
-    return () => window.removeEventListener('resize', handleResize);
+  const cleanupCall = useCallback(() => {
+    streamRef.current?.getTracks().forEach(track => track.stop());
+    socketRef.current?.disconnect();
   }, []);
 
-  const initializeCall = async () => {
+  const initializeCall = useCallback(async () => {
     try {
       setIsLoading(true);
       socketRef.current = io(process.env.NEXT_PUBLIC_API_URL as string);
@@ -73,18 +58,40 @@ export default function VideoCall({ roomId, userId, userName }: VideoCallProps) 
       socketRef.current.emit("join-room", { roomId, userId, userName });
       setIsConnected(true);
       toast.success('Connecté au serveur');
+
+      // Écouter les événements de connexion peer
+      socketRef.current.on("user-connected", (peerUserName: string) => {
+        setPeerName(peerUserName);
+        addNotification('connection', `${peerUserName} a rejoint la session`);
+      });
+
     } catch (err) {
       console.error("Erreur initialisation:", err);
-      toast.error("Erreur lors de l'initialisation de l'appel");
+      toast.error("Erreur lors de l&apos;initialisation de l&apos;appel");
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [roomId, userId, userName]);
 
-  const cleanupCall = () => {
-    streamRef.current?.getTracks().forEach(track => track.stop());
-    socketRef.current?.disconnect();
-  };
+  useEffect(() => {
+    initializeCall();
+    return () => cleanupCall();
+  }, [initializeCall, cleanupCall]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsPipMode(window.innerWidth <= 768);
+    };
+
+    // Vérifier la taille initiale
+    handleResize();
+
+    // Ajouter l'écouteur d'événement
+    window.addEventListener('resize', handleResize);
+
+    // Nettoyer l'écouteur
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const addNotification = (type: 'audio' | 'video' | 'screen' | 'quality' | 'connection', message: string) => {
     const id = Math.random().toString(36).substr(2, 9);
@@ -127,12 +134,12 @@ export default function VideoCall({ roomId, userId, userName }: VideoCallProps) 
       } else {
         // Partager l'écran
         const stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
-        if (userVideo.current) {
-          userVideo.current.srcObject = stream;
-        }
+          if (userVideo.current) {
+            userVideo.current.srcObject = stream;
+          }
         streamRef.current = stream;
         setIsScreenSharing(true);
-      }
+          }
     } catch (err) {
       console.error("Erreur partage d&apos;écran:", err);
       toast.error("Erreur lors du partage d&apos;écran");
@@ -149,7 +156,7 @@ export default function VideoCall({ roomId, userId, userName }: VideoCallProps) 
     <div className={styles.container}>
       <CallStatus isConnected={isConnected} roomId={roomId} />
       
-      <div className={styles.videoContainer}>
+    <div className={styles.videoContainer}>
         <div className={styles.videoWrapper}>
           <video 
             playsInline 
@@ -201,7 +208,7 @@ export default function VideoCall({ roomId, userId, userName }: VideoCallProps) 
       {isLoading && (
         <div className={styles.loadingOverlay}>
           <div className={styles.spinner} />
-          <p>Initialisation de l'appel...</p>
+          <p>Initialisation de l&apos;appel...</p>
         </div>
       )}
     </div>

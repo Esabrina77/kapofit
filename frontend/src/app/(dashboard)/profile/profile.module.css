@@ -1,5 +1,6 @@
-body {
+.profileContainer {
   min-height: 100vh;
+  width: 100%;
 }
 /* Effet glass inspiré de css.glass */
 .glass {

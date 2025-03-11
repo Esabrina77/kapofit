@@ -4,6 +4,10 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+  min-height: 100vh;
+}
+
 :root {
   /* Couleurs de base - Plus énergiques et sportives */
   --primary: #FF4D00;

@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import styles from './VideoCall.module.css';
+import React from 'react';
 import { FaMicrophone, FaMicrophoneSlash, FaVideo, FaVideoSlash, FaDesktop, FaPhoneSlash } from 'react-icons/fa';
+import styles from './VideoCall.module.css';
 
 interface CallControlsProps {
   onToggleAudio: () => void;
