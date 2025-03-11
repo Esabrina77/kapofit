@@ -5,7 +5,7 @@
   "main": "src/app.ts",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
-    "build": "tsc && xcopy /E /I src\\secrets dist\\secrets",
+    "build": "tsc && cp -r src/secrets dist/",
     "start": "node dist/index.js",
     "test": "jest",
     "test:watch": "jest --watch"
