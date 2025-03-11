@@ -39,25 +39,20 @@ describe('WorkoutService', () => {
         type: 'SOLO',
         date: new Date(),
         duration: 0,
-        status: 'IN_PROGRESS',
-        exercises: [
-          { name: 'Push-ups', sets: 3, reps: 10 }
-        ]
+        status: 'IN_PROGRESS'
       }
 
       // On configure le mock pour qu'il retourne notre workout de test
       mockPrisma.workout.create.mockResolvedValue(mockWorkout)
 
       // ACT : On exécute la fonction qu'on veut tester
-      const result = await workoutService.createWorkout({
-        userId: 'user123',
+      const result = await workoutService.createWorkout('user123', {
         type: 'SOLO',
-        exercises: [{ name: 'Push-ups', sets: 3, reps: 10 }]
+        duration: 0
       })
 
       // ASSERT : On vérifie que tout s'est passé comme prévu
       expect(result).toHaveProperty('id', '123')  // Le workout a bien un ID
-      expect(result.exercises).toHaveLength(1)    // Il contient bien un exercice
       expect(mockPrisma.workout.create).toHaveBeenCalled()  // La création a été appelée
     })
   })

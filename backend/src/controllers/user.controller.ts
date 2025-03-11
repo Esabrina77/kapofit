@@ -23,7 +23,7 @@ export class UserController {
   }
 
   // READ
-  getAllUsers = async (req: Request, res: Response) => {
+  getAllUsers = async (_req: Request, res: Response) => {
     try {
       const users = await this.userService.getAllUsers();
       return res.json(users);

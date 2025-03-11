@@ -22,8 +22,7 @@ export const authMiddleware = async (
   next: NextFunction
 ) => {
   try {
-    // Extraire le token du header Authorization
-    const token = req.headers.authorization?.split('Bearer ')[1]
+    const token = req.headers.authorization?.split(' ')[1]
     if (!token) {
       return res.status(401).json({ error: 'Token manquant' })
     }
@@ -34,10 +33,10 @@ export const authMiddleware = async (
     // Ajouter les informations de l'utilisateur à la requête
     req.user = decodedToken
     
-    // Passer à la suite
-    next()
+    // Passer à la suite avec return
+    return next()
   } catch (error) {
     console.error('Erreur auth:', error)
-    res.status(401).json({ error: 'Token invalide' })
+    return res.status(401).json({ error: 'Token invalide' })
   }
 } 

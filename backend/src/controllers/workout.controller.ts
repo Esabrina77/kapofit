@@ -62,9 +62,9 @@ export class WorkoutController {
         return res.status(404).json({ error: "Workout non trouvé" })
       }
 
-      res.json(workout)
+      return res.json(workout)
     } catch (error) {
-      res.status(500).json({ error: "Erreur lors de la récupération du workout" })
+      return res.status(500).json({ error: "Erreur lors de la récupération du workout" })
     }
   }
 
@@ -89,9 +89,9 @@ export class WorkoutController {
       }
 
       const workout = await workoutService.updateFullWorkout(id, data)
-      res.json(workout)
+      return res.json(workout)
     } catch (error) {
-      res.status(500).json({ error: "Erreur lors de la mise à jour complète du workout" })
+      return res.status(500).json({ error: "Erreur lors de la mise à jour complète du workout" })
     }
   }
 
@@ -111,9 +111,9 @@ export class WorkoutController {
       }
 
       const workout = await workoutService.updatePartialWorkout(id, data)
-      res.json(workout)
+      return res.json(workout)
     } catch (error) {
-      res.status(500).json({ error: "Erreur lors de la mise à jour partielle du workout" })
+      return res.status(500).json({ error: "Erreur lors de la mise à jour partielle du workout" })
     }
   }
 

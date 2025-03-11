@@ -34,7 +34,7 @@ app.use('/api/sessions', sessionRoutes);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 // Route de base
-app.get('/', (req, res) => {
+app.get('/', (_req, res) => {
   res.json({ message: 'Hello from KaporalFit API' });
 });
 
@@ -42,14 +42,14 @@ app.get('/', (req, res) => {
 initializeConfigs();
 
 // Debug middleware pour voir les requêtes
-app.use((req, res, next) => {
+app.use((req, _res, next) => {
   console.log(`🔍 ${req.method} ${req.url}`);
   next();
 });
 
 // Gestion globale des erreurs
 // Attrape toutes les erreurs non gérées dans l'application
-app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+app.use((err: any, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
   console.error('🔴 Erreur:', err);
   res.status(500).json({ error: 'Erreur serveur' });
 });

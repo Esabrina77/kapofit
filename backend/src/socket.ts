@@ -6,11 +6,6 @@ interface JoinRoomData {
   userId: string;
 }
 
-interface SignalData {
-  signal: any;
-  callerId: string;
-}
-
 export default function initializeSocket(io: Server<DefaultEventsMap, DefaultEventsMap>) {
   io.on('connection', (socket: Socket) => {
     // Rejoindre une room

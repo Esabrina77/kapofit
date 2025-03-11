@@ -12,18 +12,9 @@ const validate = (schema: z.ZodSchema) => (
 ) => {
   try {
     schema.parse(req.body);
-    next();
+    return next();
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      return res.status(400).json({
-        error: 'Données invalides',
-        details: error.errors.map(err => ({
-          field: err.path.join('.'),
-          message: err.message
-        }))
-      });
-    }
-    next(error);
+    return res.status(400).json({ error: 'Données invalides' });
   }
 };
 
